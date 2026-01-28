@@ -1,6 +1,4 @@
-from .employee_menu import employeeSignup
-
-
+from .employee_menu import employeeSignup,employeeLogin
 def menu():
     while True:
         print('''Welcome
@@ -13,7 +11,7 @@ def menu():
         elif choice==2:
             employeeSignup()
         elif choice==3:
-            pass
+            employeeLogin()
         else:
             print("Select Valid Option!")
 

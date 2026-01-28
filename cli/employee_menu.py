@@ -1,5 +1,10 @@
 from services.auth import EmployeeAuthentication
 from repositories.employee_repo import EmployeeDB
+from validation.email_validator import email_vali
+from validation.pass_validator import password_vali
+from getpass4 import getpass
+from utils.pass_hash import password_hasher,check_password
+
 
 #this object is for emp-repo
 emp_db = EmployeeDB()
@@ -12,9 +17,45 @@ def employeeSignup():
     print("Employee Signup")
     name = input("Enter your name:")
     email = input("Enter your email:")
-    password = input("Enter your password:")
-    emp_auth.createEmployee(name,email,password)
+    verify_email = emp_db.searchEmail(email)
+    if verify_email is  None:
+        if email_vali(email) is not None:
+            password = getpass("Enter your password:")
+            confirm_pw =getpass("Enter your password:")
+            if password == confirm_pw:
+                if password_vali(password):
+                    password=password_hasher(password)
+                    emp_auth.createEmployee(name,email,password)
+                else:
+                    print("""password is not valid
+                        password should be min length of 5
+                        password should contain atleast one uppercase characters
+                        password should contain atleast onelowercase characters
+                        password should contain atlease one special character
+                        password should contain atlest one digit
+                        """)
+                    employeeSignup()
+            else:
+                print("Pasword doesn't match")
+                employeeSignup()        
+                    
+        else:
+            print("Email already exists or it is not valid")
+            employeeSignup()   
+    else:
+        print("Email already exists")
+        employeeLogin()        
+
+
+
 
 def employeeLogin():
     print("Employee Login")
-   
+    email = input('Enter your email:')
+    password = getpass("Enter your password:")
+    hashed_pw = emp_auth.empLogin(email)
+    if check_password(password,hashed_pw):
+        print('Login successful')
+    else:
+        print('Login failed')    
+

@@ -1,4 +1,5 @@
 #module for login&signup for employee and admin
+
 class AdminAuthentication:
     def adminLogin(self):
         pass
@@ -11,3 +12,6 @@ class EmployeeAuthentication:
         self.e_email=e_email
         self.password=password   
         self.db.createEmp(self.e_name,self.e_email,self.password)
+
+    def empLogin(self,email):
+        return self.db.searchEmp(email)
