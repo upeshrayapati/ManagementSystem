@@ -10,8 +10,5 @@ connect = connector.connect(
     host='localhost',
     database='management_db'
 )
-# if connect.is_connected():
-#     print("Success")
-# else:
-#     print("Not connected")    
+  
 cursor=connect.cursor()

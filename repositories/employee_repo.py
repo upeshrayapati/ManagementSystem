@@ -11,16 +11,45 @@ class EmployeeDB:
 
 
     def searchEmp(self,email):
-        query = 'select password from user where user_email= %s'
+        query = 'select * from user where user_email= %s'
         values = email,
         data=cursor.execute(query,values)
         data = cursor.fetchone()
-        return data[0]
+        if data is not None:
+            return data
+        else:
+            return None
     
-    def searchEmail(self,email):
-        query = 'select user_email from user where user_email=%s'
-        values = email,
-        data=cursor.execute(query,values)
-        data = cursor.fetchall()
-        return data[0]
+
+    def getEmp(self,id):
+        query = 'select * from user where user_id=%s'
+        cursor.execute(query,(id,))
+        data = cursor.fetchone()
+        return data
     
+
+    def getAllEmp(self):
+        query = 'select * from user where is_employee=%s and is_manager=%s'
+        cursor.execute(query,(1,0))
+        datas = cursor.fetchall()
+        return datas
+    
+    def modifyEmptoMgr(self,id):
+        query = 'update user set is_manager=%s where user_id=%s'
+        values=(1,id)
+        cursor.execute(query,values)
+        connect.commit()
+        print(f"employee id with {id} promoted to manager")
+    
+    def getEmpwoMgr(self):
+        query = 'select * from user where is_employee=1 and is_manager=0 and mgr_id is null'
+        cursor.execute(query)
+        datas = cursor.fetchall()
+        return datas
+    
+    def updateMgr(self,emp_id,mgr_id):
+        query = 'update user set mgr_id=%s where user_id=%s'
+        values=(mgr_id,emp_id)
+        cursor.execute(query,values)
+        connect.commit()
+        print(f"Employee ID with {emp_id} is assigned to Manager ID{mgr_id}")
